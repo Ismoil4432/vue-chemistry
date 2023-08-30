@@ -15,7 +15,12 @@
       </el-form-item>
 
       <el-form-item label="Password" prop="password">
-        <el-input v-model="ruleForm.password" type="password" name="password" show-password />
+        <el-input
+          v-model="ruleForm.password"
+          type="password"
+          name="password"
+          show-password
+        />
       </el-form-item>
 
       <el-form-item>
@@ -76,7 +81,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         })
         .catch((error) => {
           console.log(error);
-          ElMessage.error(error.message);
+          ElMessage.error({
+            message: error.message,
+            showClose: true,
+          });
         });
     } else {
       console.log("error submit!", fields);

@@ -171,14 +171,23 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           )
           .then((res) => {
             result.value = res.data.result;
-            ElMessage.success("Success");
+            ElMessage.success({
+              message: "Success",
+              showClose: true,
+            });
           })
           .catch((error) => {
             console.log(error);
-            ElMessage.error(error.message);
+            ElMessage.error({
+              message: error.message,
+              showClose: true,
+            });
           });
       } else {
-        ElMessage.error("Please, login before using");
+        ElMessage.error({
+          message: "Please, login before using",
+          showClose: true,
+        });
       }
     } else {
       console.log("error submit!", fields);
