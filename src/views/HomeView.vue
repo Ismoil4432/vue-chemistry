@@ -1,4 +1,8 @@
 <template>
+  <div v-if="result" class="text-wrapper">
+    <el-text class="mx-1 text" size="large" tag="p">{{ result }}</el-text>
+  </div>
+
   <div class="center">
     <el-form
       ref="ruleFormRef"
@@ -63,6 +67,8 @@
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules, ElMessage } from "element-plus";
 import { chemistryService } from "../services/chemistry";
+
+const result = ref(null);
 
 interface RuleForm {
   l9_proteinurgiya_gl: string;
@@ -164,11 +170,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             token
           )
           .then((res) => {
-            ElMessage.info({
-              message: res.data.result,
-              duration: 30000,
-              showClose: true,
-            });
+            result.value = res.data.result;
+            ElMessage.success("Success");
           })
           .catch((error) => {
             console.log(error);
@@ -205,5 +208,16 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
 .form {
   width: 250px;
   margin-bottom: 100px;
+}
+
+.text-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.text {
+  width: 400px;
+  word-break: keep-all;
 }
 </style>
