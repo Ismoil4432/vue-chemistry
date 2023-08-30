@@ -9,6 +9,14 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      beforeEnter: (to, from, next) => {
+        if (!localStorage.getItem("access")) {
+          alert("Please, login before using");
+          next({ name: "login" });
+        } else {
+          next();
+        }
+      },
     },
     {
       path: "/login",

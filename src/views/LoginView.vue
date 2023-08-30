@@ -33,6 +33,7 @@
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { chemistryService } from "../services/chemistry";
+import { useRouter } from "vue-router";
 
 interface RuleForm {
   username: string;
@@ -67,9 +68,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           password: ruleForm.password,
         })
         .then((res) => {
-          console.log(res);
-          // localStorage.setItem('refresh', res.data.refresh)
-          // localStorage.setItem('access', res.data.access)
+          localStorage.setItem('refresh', res.data.refresh)
+          localStorage.setItem('access', res.data.access)
+          useRouter().push({ name: "home" });
         })
         .catch((error) => console.log(error));
     } else {
