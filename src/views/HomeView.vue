@@ -164,7 +164,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             token
           )
           .then((res) => {
-            ElMessage.info(res.data.result);
+            ElMessage.info({
+              message: res.data.result,
+              duration: 30000,
+              showClose: true,
+            });
           })
           .catch((error) => {
             console.log(error);
