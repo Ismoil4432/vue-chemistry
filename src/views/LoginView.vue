@@ -11,11 +11,11 @@
       label-position="top"
     >
       <el-form-item label="Username" prop="username">
-        <el-input v-model="ruleForm.username" />
+        <el-input v-model="ruleForm.username" name="username" />
       </el-form-item>
 
       <el-form-item label="Password" prop="password">
-        <el-input v-model="ruleForm.password" type="password" />
+        <el-input v-model="ruleForm.password" type="password" name="password" />
       </el-form-item>
 
       <el-form-item>
@@ -32,7 +32,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
-import axios from "axios";
+import { chemistryService } from "../services/chemistry";
 
 interface RuleForm {
   username: string;
@@ -61,14 +61,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      axios
-        .post("http://52.55.41.251/api/token/", {
+      chemistryService
+        .login({
           username: ruleForm.username,
           password: ruleForm.password,
         })
         .then((res) => {
-          console.log('res');
-          // localStorage.setItem('token', res.data.token)
+          console.log(res);
+          // localStorage.setItem('refresh', res.data.refresh)
+          // localStorage.setItem('access', res.data.access)
         })
         .catch((error) => console.log(error));
     } else {

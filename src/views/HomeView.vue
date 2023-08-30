@@ -61,8 +61,8 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
-import axios from "axios";
+import type { FormInstance, FormRules, ElMessage } from "element-plus";
+import { chemistryService } from "../services/chemistry";
 
 interface RuleForm {
   l9_proteinurgiya_gl: string;
@@ -97,7 +97,6 @@ const rules = reactive<FormRules<RuleForm>>({
       message: "Please input l9_proteinurgiya_gl",
       trigger: "blur",
     },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
   l10_koptokchalar_filtratsiyasi: [
     {
@@ -105,7 +104,6 @@ const rules = reactive<FormRules<RuleForm>>({
       message: "Please input l10_koptokchalar_filtratsiyasi",
       trigger: "blur",
     },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
   l11_reabsorbsiya: [
     {
@@ -113,7 +111,6 @@ const rules = reactive<FormRules<RuleForm>>({
       message: "Please input l11_reabsorbsiya",
       trigger: "blur",
     },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
   l12_umumiy_oqsil: [
     {
@@ -121,11 +118,9 @@ const rules = reactive<FormRules<RuleForm>>({
       message: "Please input l12_umumiy_oqsil",
       trigger: "blur",
     },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
   l13_kreatanin: [
     { required: true, message: "Please input l13_kreatanin", trigger: "blur" },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
   l14_proteinurgiya_gc: [
     {
@@ -133,19 +128,15 @@ const rules = reactive<FormRules<RuleForm>>({
       message: "Please input l14_proteinurgiya_gc",
       trigger: "blur",
     },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
   l15_eritrotsit: [
     { required: true, message: "Please input l15_eritrotsit", trigger: "blur" },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
   l16_leykotsit: [
     { required: true, message: "Please input l16_leykotsit", trigger: "blur" },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
   l17_gialinli: [
     { required: true, message: "Please input l17_gialinli", trigger: "blur" },
-    { min: 3, max: 20, message: "Length should be 3 to 5", trigger: "blur" },
   ],
 });
 
@@ -153,24 +144,33 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      axios
-        .post("http://52.55.41.251/app1", {
-          l9_proteinurgiya_gl: ruleForm.l9_proteinurgiya_gl,
-          l10_koptokchalar_filtratsiyasi:
-            ruleForm.l10_koptokchalar_filtratsiyasi,
-          l11_reabsorbsiya: ruleForm.l11_reabsorbsiya,
-          l12_umumiy_oqsil: ruleForm.l12_umumiy_oqsil,
-          l13_kreatanin: ruleForm.l13_kreatanin,
-          l14_proteinurgiya_gc: ruleForm.l14_proteinurgiya_gc,
-          l15_eritrotsit: ruleForm.l15_eritrotsit,
-          l16_leykotsit: ruleForm.l16_leykotsit,
-          l17_gialinli: ruleForm.l17_gialinli,
-        })
-        .then((res) => {
-          console.log("res");
-          // localStorage.setItem('token', res.data.token)
-        })
-        .catch((error) => console.log(error));
+      const token = localStorage.getItem("access");
+
+      if (token) {
+        chemistryService
+          .postData(
+            {
+              l9_proteinurgiya_gl: +ruleForm.l9_proteinurgiya_gl,
+              l10_koptokchalar_filtratsiyasi:
+                +ruleForm.l10_koptokchalar_filtratsiyasi,
+              l11_reabsorbsiya: +ruleForm.l11_reabsorbsiya,
+              l12_umumiy_oqsil: +ruleForm.l12_umumiy_oqsil,
+              l13_kreatanin: +ruleForm.l13_kreatanin,
+              l14_proteinurgiya_gc: +ruleForm.l14_proteinurgiya_gc,
+              l15_eritrotsit: +ruleForm.l15_eritrotsit,
+              l16_leykotsit: +ruleForm.l16_leykotsit,
+              l17_gialinli: +ruleForm.l17_gialinli,
+            },
+            token
+          )
+          .then((res) => {
+            console.log("res");
+            // localStorage.setItem('data', res.data)
+          })
+          .catch((error) => console.log(error));
+      } else {
+        ElMessage.error("Please, login before using");
+      }
     } else {
       console.log("error submit!", fields);
     }
