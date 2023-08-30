@@ -164,10 +164,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             token
           )
           .then((res) => {
-            console.log("res");
-            // localStorage.setItem('data', res.data)
+            ElMessage.info(res.data.result);
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            console.log(error);
+            ElMessage.error(error.message);
+          });
       } else {
         ElMessage.error("Please, login before using");
       }
