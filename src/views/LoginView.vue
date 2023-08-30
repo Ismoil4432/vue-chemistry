@@ -15,7 +15,7 @@
       </el-form-item>
 
       <el-form-item label="Password" prop="password">
-        <el-input v-model="ruleForm.password" type="password" name="password" />
+        <el-input v-model="ruleForm.password" type="password" name="password" show-password />
       </el-form-item>
 
       <el-form-item>
